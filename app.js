@@ -1,12 +1,20 @@
-function Human(name){
-    this.name = name;
+function createCounter(){
+    var count = 0;
+    return function(){
+        count++;
+        console.log(count);
+    }
 }
 
-Human.prototype.greet = function(){
-    console.log("Hello" + this.name);
-}
-var alice = new Human("Alice");
-alice.greet()
+var counter1 = createCounter();
+counter1();
+counter1();
+counter1();
 
-var bob = new Human("Bob");
-bob.greet();
+var counter2 = createCounter();
+counter2();
+counter2();
+
+count = 100;
+
+counter1();
