@@ -1,38 +1,45 @@
 function Observer(){
-    this.listeners = [];
+    this.listeners = {};
 }
 
-Observer.prototype.on = function(func){
-    this.listeners.push(func)
+Observer.prototype.on = function(event,func){
+    if (! this.listeners[event] ){
+        this.listeners[event] = [];
+    }
+    this.listeners[event].push(func);
 }
 
-Observer.prototype.off = function(func){
-    var len = this.listeners.length;
+Observer.prototype.off = function(ebent,func){
+    var ref = this.listeners[event],
+        len = this.listeners.length;
     for (var i = 0; i < len; i++){
-        var listener = this.listeners[i];
+        var listener = ref[i];
         if (listener === func){
-            this.listeners.splice(i,1);
+            ref.splice(i,1);
         }
     }
 };
 
-Observer.prototype.trigger = function(){
-    var len = this.listeners.length;
-    for (var i = 0; i < len; i++){
-        var listener = this.listeners[i];
-        listener();
+Observer.prototype.trigger = function(event){
+    var ref = this.listeners[event];
+    for (var i = 0, len = ref.length; i < len; i++){
+        var listener = ref[i];
+        if (typeof listener === "function"){
+            listener();
+        }
     }
 }
 
 var observer = new Observer();
 var greet = function(){
     console.log('Good morning');
+};
+observer.on("morning",greet);
+observer.trigger("morning");
+
+var sayEvening = function(){
+    console.log('Good evening');
 }
 
-var gree = function(){
-    console.log('test');
-}
-
-observer.on(greet);
-observer.on(gree);
-observer.trigger();
+observer.on("evening",sayEvening);
+observer.trigger("evening");
